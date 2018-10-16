@@ -15,6 +15,7 @@ class ResConfigSettings(models.TransientModel):
         selection="_partner_names_order_selection",
         help="Order to compose partner fullname",
         required=True,
+        default="first_last"
     )
     partner_names_order_changed = fields.Boolean(
         compute="_compute_names_order_changed",
