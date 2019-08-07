@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2013 Nicolas Bessi (Camptocamp SA)
 # © 2014 Agile Business Group (<http://www.agilebg.com>)
 # © 2015 Grupo ESOC (<http://www.grupoesoc.es>)
@@ -138,7 +137,7 @@ class ResPartner(models.Model):
         Removes leading, trailing and duplicated whitespace.
         """
         try:
-            name = " ".join(name.split()) if name else name
+            name = b" ".join(name.split()) if name else name
         except UnicodeDecodeError:
             # with users coming from LDAP, name can be a str encoded as utf-8
             # this happens with ActiveDirectory for instance, and in that case
@@ -176,12 +175,12 @@ class ResPartner(models.Model):
             # Remove redundant spaces
             name = self._get_whitespace_cleaned_name(
                 name, comma=(order == 'last_first_comma'))
-            parts = name.split("," if order == 'last_first_comma' else " ", 1)
+            parts = name.split(b"," if order == b'last_first_comma' else b" ", 1)
             if len(parts) > 1:
                 if order == 'first_last':
-                    parts = [" ".join(parts[1:]), parts[0]]
+                    parts = [b" ".join(parts[1:]), parts[0]]
                 else:
-                    parts = [parts[0], " ".join(parts[1:])]
+                    parts = [parts[0], b" ".join(parts[1:])]
             else:
                 while len(parts) < 2:
                     parts.append(False)
