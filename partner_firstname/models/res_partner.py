@@ -137,6 +137,8 @@ class ResPartner(models.Model):
         Removes leading, trailing and duplicated whitespace.
         """
         try:
+            if not isinstance(name, bytes):
+                name = bytes(name, 'utf-8')
             name = b" ".join(name.split()) if name else name
         except UnicodeDecodeError:
             # with users coming from LDAP, name can be a str encoded as utf-8
