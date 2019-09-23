@@ -137,9 +137,7 @@ class ResPartner(models.Model):
         Removes leading, trailing and duplicated whitespace.
         """
         try:
-            if not isinstance(name, bytes):
-                name = bytes(name, 'utf-8')
-            name = b" ".join(name.split()) if name else name
+            name = " ".join(name.split()) if name else name
         except UnicodeDecodeError:
             # with users coming from LDAP, name can be a str encoded as utf-8
             # this happens with ActiveDirectory for instance, and in that case
@@ -147,7 +145,10 @@ class ResPartner(models.Model):
             # conversion that Python does for us.
             # In that case we need to manually decode the string to get a
             # proper unicode string.
+            if not isinstance(name, bytes):
+                name = bytes(name, 'utf-8')
             name = ' '.join(name.decode('utf-8').split()) if name else name
+            name = str(name, 'utf-8')
 
         if comma:
             name = name.replace(" ,", ",")
@@ -177,12 +178,12 @@ class ResPartner(models.Model):
             # Remove redundant spaces
             name = self._get_whitespace_cleaned_name(
                 name, comma=(order == 'last_first_comma'))
-            parts = name.split(b"," if order == b'last_first_comma' else b" ", 1)
+            parts = name.split("," if order == 'last_first_comma' else " ", 1)
             if len(parts) > 1:
                 if order == 'first_last':
-                    parts = [b" ".join(parts[1:]), parts[0]]
+                    parts = [" ".join(parts[1:]), parts[0]]
                 else:
-                    parts = [parts[0], b" ".join(parts[1:])]
+                    parts = [parts[0], " ".join(parts[1:])]
             else:
                 while len(parts) < 2:
                     parts.append(False)
